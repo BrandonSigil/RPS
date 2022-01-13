@@ -1,26 +1,25 @@
-
+const scoresToWin = 5;
 let playerScore = 0;
 let computerScore = 0;
 let attempts = 0;
 const choices = ["rock", "paper", "scissors"];
+const playerRock = document.getElementById('rockbtn');
+const playerPaper = document.getElementById('paperbtn');
+const playerScissor = document.getElementById('scissorbtn');
 
 function computerPlay() {
     return choices[Math.floor(Math.random()* choices.length)]
 }
 
-function playRound() {
+function playRound(choice) {
     attempts++;
     let result = "";
-    const playerInput = prompt("Rock, Paper, or Scissors?", "rock"); 
-    const playerSelection = playerInput.toLowerCase();
+    const playerSelection = choice;
     const computerSelection = computerPlay();
-    console.log('Computer Selected:', computerSelection);
-    console.log('Player Selected:', playerSelection);
+    const btn = document.querySelector('btn')
 
     if (playerSelection == computerSelection){
         result = 'You both chose '+ playerSelection + '. Tie!';
-        console.log('You tied!');
-        playRound();
     }
     else if (
         (playerSelection === 'rock' && computerSelection === 'paper') ||
@@ -39,27 +38,30 @@ function playRound() {
         result = playerSelection + ' beats ' + computerSelection + '. You win!';
     }
     else if (!choices.includes(playerSelection)) {
-        console.log(`Choice '${playerSelection}' is not a valid choice!`);
-        //How do I write this so that if they type anything else i.e. "gun" it would return this message?
-        result = 'That\'s not a thing';
-        playRound();
-    }
-    
+        result = '';
+    }    
     document.getElementById('demo').innerHTML = result
     document.getElementById('playerScore').innerHTML = ("Player Score = " + playerScore);
     document.getElementById('computerScore').innerHTML = ("Computer Score = " + computerScore); 
 }
 
 
-function playGame () {
-    for (let i = 0; i < 5; i++) { 
-        playRound();                  
-    }
+function handleClick (choice) {
+    playRound(choice);
+
+    if (playerScore >= scoresToWin) {
+        document.getElementById('winner').innerHTML = ("PLAYER WINS!");
+        computerScore = 0;
+        playerScore = 0;
+    } else if (computerScore >= scoresToWin) {
+        document.getElementById('winner').innerHTML = ("COMPY WINS!");
+        computerScore = 0;
+        playerScore = 0;
+    } 
+    else if (computerScore && playerScore != scoresToWin)
+        document.getElementById('winner').innerHTML = ("");
 }
 
-
-playGame();
-
-console.log('Computer Score:', computerScore);
-console.log('Player Score:', playerScore);
-console.log(attempts);
+playerRock.addEventListener('click', () => handleClick('rock'));
+playerPaper.addEventListener('click', () => handleClick('paper'));
+playerScissor.addEventListener('click', () => handleClick('scissors'));
